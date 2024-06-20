@@ -1,6 +1,7 @@
 package com.example.apiqueue.listener;
 
 import com.example.apiqueue.dto.OrderCreatedEventDTO;
+import com.example.apiqueue.service.OrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.Declarable;
@@ -17,9 +18,17 @@ public class OrderCreatedListener {
 
     private final Logger logger = LoggerFactory.getLogger(OrderCreatedListener.class);
 
+    private final OrderService orderService;
+
+    public OrderCreatedListener(OrderService orderService) {
+        this.orderService = orderService;
+    }
+
     @RabbitListener(queues = ORDER_CREATED_QUEUE)
     public void listen(Message<OrderCreatedEventDTO> message) {
         logger.info("Message consumed: {}", message);
+
+        orderService.save(message.getPayload());
     }
 
     @Bean

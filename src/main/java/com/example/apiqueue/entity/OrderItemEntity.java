@@ -10,6 +10,12 @@ public class OrderItemEntity {
     public OrderItemEntity() {
     }
 
+    public OrderItemEntity(String product, Integer quantity, BigDecimal price) {
+        this.product = product;
+        this.quantity = quantity;
+        this.price = price;
+    }
+
     private String product;
 
     private Integer quantity;
