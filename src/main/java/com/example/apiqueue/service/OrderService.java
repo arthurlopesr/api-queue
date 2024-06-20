@@ -1,9 +1,12 @@
 package com.example.apiqueue.service;
 
 import com.example.apiqueue.dto.OrderCreatedEventDTO;
+import com.example.apiqueue.dto.OrderResponseDTO;
 import com.example.apiqueue.entity.OrderEntity;
 import com.example.apiqueue.entity.OrderItemEntity;
 import com.example.apiqueue.repository.OrderRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -27,6 +30,12 @@ public class OrderService {
         entity.setTotal(getTotal(eventDTO));
 
         orderRepository.save(entity);
+    }
+
+    public Page<OrderResponseDTO> findAllByCustomerId(Long customerId, PageRequest pageRequest) {
+        var orders = orderRepository.findAllByCustomerId(customerId, pageRequest);
+
+        return orders.map(OrderResponseDTO::fromEntity);
     }
 
     private static List<OrderItemEntity> getOrderItems(OrderCreatedEventDTO eventDTO) {
